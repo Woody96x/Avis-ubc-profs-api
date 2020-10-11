@@ -17,7 +17,7 @@ class Course(Resource):
                 'ON course.id = association.course_id ' \
                 'WHERE professor.name = ? COLLATE NOCASE;'
 
-        conn = sqlite3.connect(app.config['DATABASE_NAME'])
+        conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
         new_professor = find_name(professor)
         results = cur.execute(query, [new_professor]).fetchall()
@@ -39,7 +39,7 @@ class Subject(Resource):
                 'ON course.id = association.course_id ' \
                 'WHERE professor.name = ? AND course.subject = ?;'
 
-        conn = sqlite3.connect(app.config['DATABASE_NAME'])
+        conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
         new_professor = find_name(professor)
         results = cur.execute(query, [new_professor, subject.upper()]).fetchall()
@@ -62,7 +62,7 @@ class Year(Resource):
                 'ON course.id = association.course_id ' \
                 'WHERE professor.name = ? AND course.subject = ? AND course.course = ?;'
 
-        conn = sqlite3.connect(app.config['DATABASE_NAME'])
+        conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
         new_professor = find_name(professor)
         results = cur.execute(query, [new_professor, subject.upper(), course]).fetchall()
@@ -86,7 +86,7 @@ class Section(Resource):
                 'ON course.id = association.course_id ' \
                 'WHERE professor.name = ? AND course.subject = ? AND course.course = ? AND course.year_session = ?;'
 
-        conn = sqlite3.connect(app.config['DATABASE_NAME'])
+        conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
         new_professor = find_name(professor)
         results = cur.execute(query, [new_professor, subject.upper(), course, year]).fetchall()
@@ -103,7 +103,7 @@ class Professors(Resource):
         """
         query = 'SELECT professor.name FROM professor'
 
-        conn = sqlite3.connect(app.config['DATABASE_NAME'])
+        conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
         results = cur.execute(query).fetchall()
         new_results = [result[0] for result in results]
@@ -120,7 +120,7 @@ class Professors(Resource):
         query = 'SELECT professor.name FROM professor WHERE professor.name LIKE ?' \
                 'ORDER by professor.name'
 
-        conn = sqlite3.connect(app.config['DATABASE_NAME'])
+        conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
 
         if len(prof_name.split(' ')) > 1:
@@ -142,7 +142,7 @@ class SubjectFindCourses(Resource):
         query = 'SELECT DISTINCT course.course FROM course WHERE course.subject = ? ' \
                 'ORDER BY course.course;'
 
-        conn = sqlite3.connect(app.config['DATABASE_NAME'])
+        conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
         results = cur.execute(query, [subject]).fetchall()
         new_results = [result[0] for result in results]
@@ -159,7 +159,7 @@ class SubjectCourseProfessor(Resource):
                 'INNER JOIN grades ON course.id = grades.course_id ' \
                 'WHERE course.subject = ? AND course.course = ?'
 
-        conn = sqlite3.connect(app.config['DATABASE_NAME'])
+        conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
         results = cur.execute(query, [subject, course]).fetchall()
         new_results = [result[0] for result in results]
