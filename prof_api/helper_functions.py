@@ -23,7 +23,7 @@ def find_name(professor):
     name = professor.split('-')
     query = 'SELECT name FROM professor WHERE name LIKE ?;'
 
-    conn = sqlite3.connect(app.config['DATABASE_NAME'])
+    conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
     all_prof_names = cur.execute(query, ['%{}%'.format(name[0])]).fetchall()
     for prof_name in all_prof_names:
@@ -73,7 +73,7 @@ def general_get(professor, add_query='', *options):
             'INNER JOIN grades ON course.id = grades.course_id ' \
             'WHERE professor.name = ? ' + add_query
 
-    conn = sqlite3.connect(app.config['DATABASE_NAME'])
+    conn = sqlite3.connect('db.sqlite')
     conn.row_factory = result_to_json
     cur = conn.cursor()
     new_options = [professor] + [x for x in options if x != 'fetchone']
